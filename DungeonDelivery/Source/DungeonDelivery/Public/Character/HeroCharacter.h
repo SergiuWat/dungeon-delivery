@@ -64,6 +64,12 @@ public:
 	float DOTTickDamage = 0.5f;
 
 	bool bHasAlreadyDOT = false;
+
+	UPROPERTY(EditAnywhere, Category = "Parry", meta = (ClampMin = "0.0", ClampMax = "1.0"))
+	float ParryChance = 0.25f;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Parry")
+	void OnHeroParried();
 protected:
 
 	virtual void BeginPlay() override;

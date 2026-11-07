@@ -39,7 +39,17 @@ void AHeroCharacter::HandleDeath()
 
 void AHeroCharacter::ReceiveDamage(AActor* DamageActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCause)
 {
-	
+	if (bIsDead) return;
+
+	APlayerCharacter* Projectile = Cast<APlayerCharacter>(DamageCause);
+
+	if (IsValid(Projectile) && FMath::FRand() < ParryChance)
+	{
+		Projectile->MarkParried(this);
+		OnHeroParried();
+		return;
+	}
+
 	if (ASlowDamageEnemyCharacter* SlowDamageEnemy = Cast<ASlowDamageEnemyCharacter>(DamageCause))
 	{
 		Health = FMath::Clamp(Health - Damage, 0.f, MaxHealh);
