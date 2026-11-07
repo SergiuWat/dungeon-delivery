@@ -21,7 +21,7 @@ public:
 	float SlowAmount = 400.f;
 
 	UPROPERTY(EditAnywhere)
-	float RadialDamageArea = 200.f;
+	float RadialDamageArea = 400.f;
 
 protected:
 

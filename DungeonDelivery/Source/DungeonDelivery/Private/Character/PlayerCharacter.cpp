@@ -40,6 +40,21 @@ APlayerCharacter::APlayerCharacter()
 	ProjectileMovementComponent->SetUpdatedComponent(CollisionSphere);
 	ProjectileMovementComponent->bRotationFollowsVelocity = false;
 
+	DamageToCause = 20.f;
+
+}
+
+void APlayerCharacter::ApplySpeedBoos(float ForwardBoost, float UpwardBoost)
+{
+	FVector& Velocity = ProjectileMovementComponent->Velocity;
+	const FVector FlightDirection = Velocity.GetSafeNormal2D();
+
+	Velocity += FlightDirection * ForwardBoost;
+
+	if (UpwardBoost > 0.f)
+	{
+		Velocity.Z = FMath::Max(Velocity.Z, UpwardBoost);
+	}
 }
 
 void APlayerCharacter::BeginPlay()
@@ -58,7 +73,7 @@ void APlayerCharacter::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 
 	if (DamageTarget)
 	{
-		UGameplayStatics::ApplyDamage(DamageTarget, 20.f, GetInstigatorController(), this, UDamageType::StaticClass());
+		UGameplayStatics::ApplyDamage(DamageTarget, DamageToCause, GetInstigatorController(), this, UDamageType::StaticClass());
 
 		APlayerController* PlayerController = Cast<APlayerController>(GetController());
 

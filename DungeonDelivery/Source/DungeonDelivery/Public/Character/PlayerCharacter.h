@@ -37,6 +37,9 @@ public:
 
 	UPROPERTY()
 	ACatapult* LaunchingCatapult = nullptr;
+
+	void ApplySpeedBoos(float ForwardBoost, float UpwardBoost);
+
 protected:
 
 	virtual void BeginPlay() override;

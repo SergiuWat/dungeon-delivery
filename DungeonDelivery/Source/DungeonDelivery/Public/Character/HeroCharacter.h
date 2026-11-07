@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "HeroCharacter.generated.h"
 
+class USoundBase;
+
 UCLASS()
 class DUNGEONDELIVERY_API AHeroCharacter : public ACharacter
 {
@@ -15,6 +17,14 @@ public:
 
 	AHeroCharacter();
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsDead = false;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Hero")
+	void OnHeroDied();
+
+	void HandleDeath();
 
 	UFUNCTION()
 	void ReceiveDamage(AActor* DamageActor, float Damage, const UDamageType* DamageType, class AController* InstigatorController, AActor* DamageCause);
@@ -29,10 +39,31 @@ public:
 
 	FTimerHandle SlowEffectTimerHandle;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Audio")
+	TObjectPtr<USoundBase> HitSound = nullptr;
+
 	UFUNCTION()
 	void SlowEffectFinished();
 
 	bool  bIsAlreadyAffectedBySlow = false;
+
+	FTimerHandle DOTDurationHandle;
+
+	UFUNCTION()
+	void DOTDurationFinished();
+
+	FTimerHandle DOTTickDamageHandle;
+
+	UFUNCTION()
+	void DOTTickDamageFinished(float Damage);
+
+	UPROPERTY(EditAnywhere)
+	float DOTDuration = 10.f;
+
+	UPROPERTY(EditAnywhere)
+	float DOTTickDamage = 0.5f;
+
+	bool bHasAlreadyDOT = false;
 protected:
 
 	virtual void BeginPlay() override;
