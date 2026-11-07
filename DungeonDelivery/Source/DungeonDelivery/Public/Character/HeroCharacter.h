@@ -24,6 +24,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float MaxHealh = 100.f;
+
+	float RestoreWalkSpeedAmount;
+
+	FTimerHandle SlowEffectTimerHandle;
+
+	UFUNCTION()
+	void SlowEffectFinished();
+
+	bool  bIsAlreadyAffectedBySlow = false;
 protected:
 
 	virtual void BeginPlay() override;

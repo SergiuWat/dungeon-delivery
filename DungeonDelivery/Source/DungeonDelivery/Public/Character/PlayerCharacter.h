@@ -30,10 +30,13 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float LateralMoveSpeed = 600.f;
 
+	UPROPERTY(EditAnywhere)
+	float DamageToCause;
+
 	void LaunchProjectile(const FVector& LaunchVelocity);
 
 	UPROPERTY()
-	TObjectPtr<ACatapult> LaunchingCatapult = nullptr;
+	ACatapult* LaunchingCatapult = nullptr;
 protected:
 
 	virtual void BeginPlay() override;
