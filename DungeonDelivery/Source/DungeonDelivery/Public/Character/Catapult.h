@@ -26,7 +26,10 @@ public:
 	void SpawnRandomEnemies(float ChargePercent);
 
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* TestMesh;
+	UStaticMeshComponent* BaseCanonMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* CanonMesh;
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* PositionToSpawnEnemies;
@@ -35,7 +38,14 @@ public:
 	USceneComponent* SceneRoot;
 
 	UPROPERTY(VisibleAnywhere)
-	USceneComponent* AimPivot;
+	USceneComponent* CannonPivot;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Cannon")
+	void OnCannonFired();
+
+
+	//UPROPERTY(VisibleAnywhere)
+	//USceneComponent* AimPivot;
 
 	UPROPERTY(EditAnywhere, Category = "Launch")
 	float LaunchSpeed = 1800.f;

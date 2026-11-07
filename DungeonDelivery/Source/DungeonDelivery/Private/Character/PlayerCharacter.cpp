@@ -40,6 +40,21 @@ APlayerCharacter::APlayerCharacter()
 	ProjectileMovementComponent->SetUpdatedComponent(CollisionSphere);
 	ProjectileMovementComponent->bRotationFollowsVelocity = false;
 
+	DamageToCause = 20.f;
+
+}
+
+void APlayerCharacter::ApplySpeedBoos(float ForwardBoost, float UpwardBoost)
+{
+	FVector& Velocity = ProjectileMovementComponent->Velocity;
+	const FVector FlightDirection = Velocity.GetSafeNormal2D();
+
+	Velocity += FlightDirection * ForwardBoost;
+
+	if (UpwardBoost > 0.f)
+	{
+		Velocity.Z = FMath::Max(Velocity.Z, UpwardBoost);
+	}
 }
 
 void APlayerCharacter::BeginPlay()
@@ -58,18 +73,55 @@ void APlayerCharacter::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 
 	if (DamageTarget)
 	{
-		UGameplayStatics::ApplyDamage(DamageTarget, 20.f, GetInstigatorController(), this, UDamageType::StaticClass());
+		UGameplayStatics::ApplyDamage(DamageTarget, DamageToCause, GetInstigatorController(), this, UDamageType::StaticClass());
 
-		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		FinishImpact();
 
-		if (IsValid(PlayerController) && IsValid(LaunchingCatapult))
-		{
-			PlayerController->Possess(LaunchingCatapult);
-			
-			FViewTargetTransitionParams params;
-			
-			PlayerController->SetViewTarget(LaunchingCatapult, params);
-		}
+		//APlayerController* PlayerController = Cast<APlayerController>(GetController());
+
+		//if (IsValid(PlayerController) && IsValid(LaunchingCatapult))
+		//{
+		//	PlayerController->Possess(LaunchingCatapult);
+		//	
+		//	FViewTargetTransitionParams params;
+		//	
+		//	PlayerController->SetViewTarget(LaunchingCatapult, params);
+		//}
+	}
+
+	//Destroy();
+}
+
+void APlayerCharacter::FinishImpact()
+{
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	AActor* Hero = ParryTarget.Get();
+
+	if (!IsValid(PC) || !IsValid(Hero))
+	{
+		ReturnToCatapult();
+		return;
+	}
+
+	ProjectileMovementComponent->Deactivate();
+	SetActorEnableCollision(false);
+	SetActorTickEnabled(false);
+	SetActorHiddenInGame(true);
+
+	PC->SetViewTarget(Hero);
+
+	FTimerHandle ParryTimer;
+	GetWorldTimerManager().SetTimer(ParryTimer, this, &ThisClass::ReturnToCatapult, ReturnToCatapultTimer, false);
+}
+
+void APlayerCharacter::ReturnToCatapult()
+{
+	APlayerController* PC = Cast<APlayerController>(GetController());
+
+	if (IsValid(PC) && IsValid(LaunchingCatapult))
+	{
+		PC->Possess(LaunchingCatapult);
+		PC->SetViewTarget(LaunchingCatapult);
 	}
 
 	Destroy();

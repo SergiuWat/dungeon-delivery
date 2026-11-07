@@ -37,6 +37,14 @@ public:
 
 	UPROPERTY()
 	ACatapult* LaunchingCatapult = nullptr;
+
+	void ApplySpeedBoos(float ForwardBoost, float UpwardBoost);
+
+	void MarkParried(AActor* Hero) { ParryTarget = Hero; }
+
+	UPROPERTY(EditAnywhere)
+	float ReturnToCatapultTimer = 0.5f;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -51,11 +59,18 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	USphereComponent* CollisionSphere;
 
+	void FinishImpact();
+	bool bImpactHandled = false;
+
 private:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCameraComponent> FollowCamera;
+
+	TWeakObjectPtr<AActor> ParryTarget;
+	void ReturnToCatapult();
+
 
 };

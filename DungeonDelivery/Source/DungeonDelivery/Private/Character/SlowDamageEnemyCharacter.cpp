@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Components/SphereComponent.h"
 #include "Character/Catapult.h"
+#include "DrawDebugHelpers.h"
 
 ASlowDamageEnemyCharacter::ASlowDamageEnemyCharacter()
 {
@@ -22,8 +23,10 @@ void ASlowDamageEnemyCharacter::OnHit(UPrimitiveComponent* HitComp, AActor* Othe
 	if (DamageTarget)
 	{
 		UGameplayStatics::ApplyRadialDamage(this, DamageToCause, GetActorLocation(), RadialDamageArea, UDamageType::StaticClass(), TArray<AActor*>(), this, GetInstigatorController(), true);
-
-		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		//DrawDebugSphere(GetWorld(), GetActorLocation(), RadialDamageArea, 24, FColor::Red, false, 3.f);
+		
+		FinishImpact();
+		/*APlayerController* PlayerController = Cast<APlayerController>(GetController());
 
 		if (IsValid(PlayerController) && IsValid(LaunchingCatapult))
 		{
@@ -32,8 +35,8 @@ void ASlowDamageEnemyCharacter::OnHit(UPrimitiveComponent* HitComp, AActor* Othe
 			FViewTargetTransitionParams params;
 
 			PlayerController->SetViewTarget(LaunchingCatapult, params);
-		}
+		}*/
 	}
 
-	Destroy();
+	//Destroy();
 }

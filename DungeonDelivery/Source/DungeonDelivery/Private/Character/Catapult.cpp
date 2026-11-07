@@ -14,11 +14,18 @@ ACatapult::ACatapult()
     SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
     SetRootComponent(SceneRoot);
 
-    AimPivot = CreateDefaultSubobject<USceneComponent>(TEXT("AimPivot"));
-    AimPivot->SetupAttachment(SceneRoot);
 
-    TestMesh = CreateDefaultSubobject<UStaticMeshComponent>("TestMesh");
-    TestMesh->SetupAttachment(GetRootComponent());
+    BaseCanonMesh = CreateDefaultSubobject<UStaticMeshComponent>("BaseCannonMesh");
+    BaseCanonMesh->SetupAttachment(GetRootComponent());
+
+    CannonPivot = CreateDefaultSubobject<USceneComponent>(TEXT("CannonPivot"));
+    CannonPivot->SetupAttachment(BaseCanonMesh);
+
+    /*AimPivot = CreateDefaultSubobject<USceneComponent>(TEXT("AimPivot"));
+    AimPivot->SetupAttachment(BaseCanonMesh);*/
+
+    CanonMesh = CreateDefaultSubobject<UStaticMeshComponent>("CannonMesh");
+    CanonMesh->SetupAttachment(CannonPivot);
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>("CameraBoom");
 	//CameraBoom->SetupAttachment(TestMesh);
@@ -31,8 +38,7 @@ ACatapult::ACatapult()
 	PositionToSpawnEnemies = CreateDefaultSubobject<USceneComponent>("SpawnPositionComponent");
 	//PositionToSpawnEnemies->SetupAttachment(GetRootComponent());
 
-    TestMesh->SetupAttachment(AimPivot);
-    PositionToSpawnEnemies->SetupAttachment(AimPivot);
+    PositionToSpawnEnemies->SetupAttachment(CannonPivot);
     CameraBoom->SetupAttachment(SceneRoot);
 }
 
@@ -49,7 +55,7 @@ void ACatapult::Tick(float DeltaTime)
 
     if (!IsValid(GetController())) return;
 
-    AimPivot->SetWorldRotation(GetControlRotation());
+    CannonPivot->SetWorldRotation(GetControlRotation());
 
 }
 
@@ -81,7 +87,7 @@ void ACatapult::SpawnRandomEnemies(float ChargePercent)
 
     const float ShotSpeed = FMath::Lerp(LaunchSpeed, MaxLaunchSpeed, ChargePercent);
     Enemy->LaunchProjectile(LaunchDirection * ShotSpeed);
-
+    OnCannonFired();
     PlayerController->Possess(Enemy);
 
 }
