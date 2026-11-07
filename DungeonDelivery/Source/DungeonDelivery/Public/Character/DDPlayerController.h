@@ -20,6 +20,16 @@ class DUNGEONDELIVERY_API ADDPlayerController : public APlayerController
 
 public:
 	virtual void SetupInputComponent() override;
+
+	UFUNCTION(BlueprintPure, Category = "Launch")
+	float GetLaunchChargePercent() const;
+
+	void StartLaunchCharge();
+	void CancelLaunchCharge();
+
+	bool bIsChargingLaunch = false;
+	double ChargeStartTime = 0.0;
+
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")

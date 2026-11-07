@@ -53,7 +53,7 @@ void ACatapult::Tick(float DeltaTime)
 
 }
 
-void ACatapult::SpawnRandomEnemies()
+void ACatapult::SpawnRandomEnemies(float ChargePercent)
 {
     AController* PlayerController = GetController();
 
@@ -79,7 +79,8 @@ void ACatapult::SpawnRandomEnemies()
 
     const FVector LaunchDirection = PositionToSpawnEnemies->GetForwardVector();
 
-    Enemy->LaunchProjectile(LaunchDirection * LaunchSpeed);
+    const float ShotSpeed = FMath::Lerp(LaunchSpeed, MaxLaunchSpeed, ChargePercent);
+    Enemy->LaunchProjectile(LaunchDirection * ShotSpeed);
 
     PlayerController->Possess(Enemy);
 

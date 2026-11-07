@@ -20,7 +20,32 @@ void ADDPlayerController::SetupInputComponent()
 
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
 	EnhancedInputComponent->BindAction(MoveLauncherAction, ETriggerEvent::Triggered, this, &ThisClass::MoveLauncher);
-	EnhancedInputComponent->BindAction(LaunchAction, ETriggerEvent::Started, this, &ThisClass::Launch);
+	EnhancedInputComponent->BindAction(LaunchAction, ETriggerEvent::Started, this, &ThisClass::StartLaunchCharge);
+	EnhancedInputComponent->BindAction(LaunchAction, ETriggerEvent::Completed, this, &ThisClass::Launch);
+	EnhancedInputComponent->BindAction(LaunchAction, ETriggerEvent::Canceled, this, &ThisClass::CancelLaunchCharge);
+}
+
+float ADDPlayerController::GetLaunchChargePercent() const
+{
+	const ACatapult* Catapult = Cast<ACatapult>(GetPawn());
+	if (!bIsChargingLaunch || !IsValid(Catapult)) return 0.f;
+
+	const float HeldTime = GetWorld()->GetTimeSeconds() - ChargeStartTime;
+	return FMath::Clamp(HeldTime / FMath::Max(Catapult->FullChargeTime, 0.01f), 0.f, 1.f);
+}
+
+void ADDPlayerController::StartLaunchCharge()
+{
+
+	if (!IsValid(Cast<ACatapult>(GetPawn()))) return;
+
+	ChargeStartTime = GetWorld()->GetTimeSeconds();
+	bIsChargingLaunch = true;
+}
+
+void ADDPlayerController::CancelLaunchCharge()
+{
+	bIsChargingLaunch = false;
 }
 
 void ADDPlayerController::Move(const FInputActionValue& Value)
@@ -47,9 +72,13 @@ void ADDPlayerController::MoveLauncher(const FInputActionValue & Value)
 
 void ADDPlayerController::Launch()
 {
+	if (!bIsChargingLaunch) return;
+
+	const float ChargePercent = GetLaunchChargePercent();
+	bIsChargingLaunch = false;
 	if (ACatapult* Catapult = Cast<ACatapult>(GetPawn()))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Launch"));
-		Catapult->SpawnRandomEnemies();
+		Catapult->SpawnRandomEnemies(ChargePercent);
 	}
 }

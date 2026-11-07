@@ -23,7 +23,7 @@ public:
 	TArray<TSubclassOf<APlayerCharacter>> CharactersToSpawn;
 
 	UFUNCTION()
-	void SpawnRandomEnemies();
+	void SpawnRandomEnemies(float ChargePercent);
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* TestMesh;
@@ -39,6 +39,12 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Launch")
 	float LaunchSpeed = 1800.f;
+
+	UPROPERTY(EditAnywhere, Category = "Launch", meta = (ClampMin = "0.0"))
+	float MaxLaunchSpeed = 3200.f;
+
+	UPROPERTY(EditAnywhere, Category = "Launch", meta = (ClampMin = "0.01"))
+	float FullChargeTime = 1.f;
 
 protected:
 
