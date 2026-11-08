@@ -9,6 +9,7 @@
 #include "Character/Catapult.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -75,6 +76,12 @@ void APlayerCharacter::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 	{
 		UGameplayStatics::ApplyDamage(DamageTarget, DamageToCause, GetInstigatorController(), this, UDamageType::StaticClass());
 
+		if (HitSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+		}
+		
+
 		FinishImpact();
 
 		//APlayerController* PlayerController = Cast<APlayerController>(GetController());
@@ -139,6 +146,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 void APlayerCharacter::LaunchProjectile(const FVector& LaunchVelocity)
 {
+	if (LaunchSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
+	}
 
 	ProjectileMovementComponent->Velocity = LaunchVelocity;
 }

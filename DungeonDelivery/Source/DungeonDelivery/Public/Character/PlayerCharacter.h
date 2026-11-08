@@ -11,6 +11,7 @@ class UCameraComponent;
 class USphereComponent;
 class UProjectileMovementComponent;
 class ACatapult;
+class USoundBase;
 
 UCLASS()
 class DUNGEONDELIVERY_API APlayerCharacter : public APawn
@@ -44,6 +45,12 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float ReturnToCatapultTimer = 0.5f;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* LaunchSound;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* HitSound;
 
 protected:
 

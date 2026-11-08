@@ -8,6 +8,7 @@
 #include "PoweUpBase.generated.h"
 
 class USphereComponent;
+class USoundBase;
 
 UCLASS()
 class DUNGEONDELIVERY_API APoweUpBase : public AActor, public IIPowerUpInterface
@@ -49,6 +50,9 @@ public:
 
 	FVector FloatStartLocation = FVector::ZeroVector;
 	float FloatElapsedTime = 0.f;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* ActivationSound;
 protected:
 
 	virtual void BeginPlay() override;

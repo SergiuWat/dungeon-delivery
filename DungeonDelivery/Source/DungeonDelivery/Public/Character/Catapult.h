@@ -9,6 +9,8 @@
 class USpringArmComponent;
 class UCameraComponent;
 class APlayerCharacter;
+class USoundBase;
+
 UCLASS()
 class DUNGEONDELIVERY_API ACatapult : public APawn
 {
@@ -55,6 +57,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Launch", meta = (ClampMin = "0.01"))
 	float FullChargeTime = 1.f;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* CannonFireSound;
 
 protected:
 

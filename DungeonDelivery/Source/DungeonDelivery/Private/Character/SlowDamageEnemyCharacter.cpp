@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "Character/Catapult.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 ASlowDamageEnemyCharacter::ASlowDamageEnemyCharacter()
 {
@@ -23,9 +24,18 @@ void ASlowDamageEnemyCharacter::OnHit(UPrimitiveComponent* HitComp, AActor* Othe
 	if (DamageTarget)
 	{
 		UGameplayStatics::ApplyRadialDamage(this, DamageToCause, GetActorLocation(), RadialDamageArea, UDamageType::StaticClass(), TArray<AActor*>(), this, GetInstigatorController(), true);
-		//DrawDebugSphere(GetWorld(), GetActorLocation(), RadialDamageArea, 24, FColor::Red, false, 3.f);
+		
+
+		if (HitSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+		}
 		
 		FinishImpact();
+
+		//DrawDebugSphere(GetWorld(), GetActorLocation(), RadialDamageArea, 24, FColor::Red, false, 3.f);
+		
+
 		/*APlayerController* PlayerController = Cast<APlayerController>(GetController());
 
 		if (IsValid(PlayerController) && IsValid(LaunchingCatapult))

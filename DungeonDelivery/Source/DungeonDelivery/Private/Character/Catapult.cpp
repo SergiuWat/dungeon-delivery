@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Character/PlayerCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 ACatapult::ACatapult()
 {
@@ -87,6 +88,12 @@ void ACatapult::SpawnRandomEnemies(float ChargePercent)
 
     const float ShotSpeed = FMath::Lerp(LaunchSpeed, MaxLaunchSpeed, ChargePercent);
     Enemy->LaunchProjectile(LaunchDirection * ShotSpeed);
+
+    if (CannonFireSound)
+    {
+        UGameplayStatics::PlaySoundAtLocation(this, CannonFireSound, GetActorLocation());
+    }
+
     OnCannonFired();
     PlayerController->Possess(Enemy);
 

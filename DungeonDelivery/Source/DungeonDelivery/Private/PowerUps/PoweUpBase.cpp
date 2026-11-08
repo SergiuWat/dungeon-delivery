@@ -6,6 +6,7 @@
 #include "Character/PlayerCharacter.h"
 #include "Character/DOTDamageCharacter.h"
 #include "Character/SlowDamageEnemyCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APoweUpBase::APoweUpBase()
@@ -32,6 +33,11 @@ void APoweUpBase::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 {
 	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
 	if (!IsValid(PlayerCharacter)) return;
+
+	if (ActivationSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ActivationSound, GetActorLocation());
+	}
 
 	ActivatePowerUp(PlayerCharacter);
 	Destroy();
