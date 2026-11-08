@@ -139,6 +139,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 void APlayerCharacter::LaunchProjectile(const FVector& LaunchVelocity)
 {
+
 	ProjectileMovementComponent->Velocity = LaunchVelocity;
 }
 

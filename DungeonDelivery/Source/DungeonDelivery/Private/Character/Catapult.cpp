@@ -83,7 +83,7 @@ void ACatapult::SpawnRandomEnemies(float ChargePercent)
 
     Enemy->LaunchingCatapult = this;
 
-    const FVector LaunchDirection = PositionToSpawnEnemies->GetForwardVector();
+    FVector LaunchDirection = PositionToSpawnEnemies->GetForwardVector();
 
     const float ShotSpeed = FMath::Lerp(LaunchSpeed, MaxLaunchSpeed, ChargePercent);
     Enemy->LaunchProjectile(LaunchDirection * ShotSpeed);
